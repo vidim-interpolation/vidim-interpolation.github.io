@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="description"
+        content="Video Interpolation With Diffusion Models">
+  <meta name="keywords" content="VIDIM">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Video Interpolation With Diffusion Models</title>
+
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+ 
+
+  <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+        rel="stylesheet">
+
+  <link rel="stylesheet" href="./static/css/bulma.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-carousel.min.css">
+  <link rel="stylesheet" href="./static/css/bulma-slider.min.css">
+  <link rel="stylesheet" href="./static/css/fontawesome.all.min.css">
+  <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+  <link rel="stylesheet" href="./static/css/index.css">
+  <link rel="icon" href="./static/images/favicon.svg">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script defer src="./static/js/fontawesome.all.min.js"></script>
+  <script src="./static/js/bulma-carousel.min.js"></script>
+  <script src="./static/js/bulma-slider.min.js"></script>
+  <script src="./static/js/index.js"></script>
+</head>
+<body>
+
+<!-- <nav class="navbar" role="navigation" aria-label="main navigation">
+  <div class="navbar-brand">
+    <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+      <span aria-hidden="true"></span>
+    </a>
+  </div>
+</nav> -->
+
+
+<section class="hero">
+  <div class="hero-body">
+    <div class="container is-max-desktop">
+      <div class="columns is-centered">
+        <div class="column has-text-centered">
+          <h1 class="title is-1 publication-title">Video Interpolation With Diffusion Models</h1>
+          
+          <!-- Author Block -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block">
+             <span class="author-block">
+              <a href="">Siddhant Jain*</a><sup>1</sup>,</span>
+            <span class="author-block">
+              <a href="">Daniel Watson*</a><sup>2</sup>,</span>
+            <span class="author-block">
+              <a href="">Eric Tabellion</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="">Aleksander Holynski</a><sup>1</sup>,
+            </span>
+            <span class="author-block">
+              <a href="">Ben Poole</a><sup>2</sup>,
+            </span>
+            <span class="author-block">
+              <a href="">Janne Kontkanen</a><sup>1</sup>
+            </span>
+          </div>
+          
+          <!-- Affliation block -->
+          <div class="is-size-5 publication-authors">
+            <span class="author-block"><sup>1</sup>Google Research,</span>
+            <span class="author-block"><sup>2</sup>Google DeepMind</span>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+   <center>
+    <div class="row row-teaser"> 
+			<div class="col">
+				<!-- <video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_vidm.mp4"></video> -->
+				<video autoplay loop muted><source type="video/mp4" src="./static/videos/teaser_video.mp4"></video>
+			</div>
+    </div>
+    </center>
+    <!-- Abstract. -->
+      <div class="header_dark_gray">
+        <h2 class="title is-3">Abstract</h2>
+      </div>
+      <div class="content has-text-justified">
+          <p>
+            We present VIDIM, a generative model for video interpolation, which creates short videos given a start and end frame. In order to achieve high fidelity and generate motions unseen in the input data, VIDIM uses cascaded diffusion models to first generate the target video at low resolution, and then generate the high-resolution video conditioned on the low-resolution generated video. We compare VIDIM to previous state-of-the-art methods on video interpolation, and demonstrate how such works fail in most settings where the underlying motion is complex, nonlinear, or ambiguous while VIDIM can easily handle such cases. We additionally demonstrate how classifier-free guidance on the start and end frame and conditioning the super-resolution model on the original high-resolution frames without additional parameters unlocks high-fidelity results. VIDIM is fast to sample from as it jointly denoises all the frames to be generated, requires less than a billion parameters per diffusion model to produce compelling results, and still enjoys scalability and improved quality at larger parameter counts.
+          </p>
+    </div>
+    <div class="row"><img src="./static/images/method_architecture_figure.png" alt="High level figure for the method showing the cascaded diffusion model"></div> 
+    <!--/ Abstract. -->
+  </div>
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="container">
+		  <div class="header_dark_gray">
+				<h2 class="title is-3">Comparisons to prior work</h2>
+			</div>
+			<div class="content has-text-justified">
+				<p>
+				Below we compare VIDIM to other methods in the literature. The two input frames are shown at the left, and the output for the selected method is shown at the right. Click below to change the model!
+				</p>
+			</div>
+			<div class="row" id="comparisons-select" style="text-align: center;">
+				<div class="col"> RIFE </div>
+				<div class="col"> AMT </div>
+				<div class="col"> FILM </div>
+				<div class="col"> LDMVFI </div>
+				<div class="col selected"> VIDIM </div>
+      </div>
+      <div id="comparisons-show">
+      <div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/1_input.mp4"></video></div> 
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/1_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/1_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/1_film.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/1_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/1_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/1_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+     	  <div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/101_input.mp4"></video></div> 
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/101_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/101_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/101_film.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/101_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/101_vidm.mp4"></video></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/101_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/102_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/102_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/102_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/102_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/102_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/102_vidm.mp4"></video></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/102_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/107_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/107_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/107_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/107_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/107_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/107_vidm.mp4"></video></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/107_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/110_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/110_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/110_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/110_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/110_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/110_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/110_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/113_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/113_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/113_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/113_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/113_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/113_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/113_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/119_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/119_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/119_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/119_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/119_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/119_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/119_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/137_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/137_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/137_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/137_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/137_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/137_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/137_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/143_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/143_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/143_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/143_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/143_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/143_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/143_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/169_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/169_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/169_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/169_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/169_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/169_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/169_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/18_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/18_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/18_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/18_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/18_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/18_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/18_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/207_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/207_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/207_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/207_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/207_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/207_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/207_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/225_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/225_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/225_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/225_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/225_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/225_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/225_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/234_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/234_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/234_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/234_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/234_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/234_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/234_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/251_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/251_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/251_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/251_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/251_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/251_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/251_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			<div class="item"> 
+				<div class="row"> 
+					<div class="col"><video autoplay loop muted ><source type="video/mp4" src="./static/videos/sota_comparisons/36_input.mp4"></video></div>
+					<div class="col" style="width: 12rem;"> <div class="right_arrow"></div></div>
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_rife.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_amt.mp4"></video></div> 
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_film.mp4"></video></div>
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_ldmvfi.mp4"></video></div>  -->
+					<div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_vidm.mp4"></video></div> 
+					<!-- <div class="col"><video autoplay loop muted><source type="video/mp4" src="./static/videos/sota_comparisons/36_gt.mp4"></video></div>  -->
+				</div>
+			</div>
+			</div>
+    </div>
+  <div>
+</div>
+<!--   
+ 	<center>
+   <span class="link-block">
+                <a href="./gallery.html"
+                   class="external-link button is-normal is-rounded is-dark">
+                  <span class="icon">
+                      <i class="far fa-images"></i>
+                  </span>
+                  <span> See entire gallery </span>
+                  </a> 
+  </center> -->
+</section>
+
+<section class="section">
+  <div class="container is-max-desktop">
+    <div class="columns is-centered has-text-centered">
+      <div class="column is-four-fifths">
+       <div class="header_dark_gray">
+        <h2 class="title is-3">Evaluation Benchmarks</h2>
+        </div>
+        <div class="content has-text-justified">
+          <p>
+          We created subsets of the Davis and UCF101 datasets of 350-400 videos with examples that contain a mixture of large and small motion. Each video consists of 9 frames. The first and last frames are used as input and the middle 7 frames are treated as the groundtruth for the interpolation tasks. To regenerate the datasets, please follow the instructions <a href="https://github.com/vidmcvpr2024/vidmcvpr2024.github.io/tree/main/static/scripts"> here </a>.   <br>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container">
+    <div class="columns is-centered">
+      <div class="column is-8">
+        <div class="content">
+        	<center>
+          <p>
+          Website template from <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a> and <a href="https://3d-diffusion.github.io/">3dim</a>.
+          </p>
+          </center>
+        </div>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+$(document).ready(() => {
+  $('#comparisons-select .col').click(e => {
+	  let model = e.target.innerHTML.replace(/\s/g, '');
+
+		for (let col of $('#comparisons-select .col')) {
+		  console.log(col);
+		  col.classList.remove('selected');
+			if (col.innerHTML.replace(/\s/g, '') === model) {
+			  col.classList.add('selected');
+			}
+		}
+		
+		for (let item of $('#comparisons-show').children()) {
+		  const row = item.children[0];
+			const col = row.children[row.children.length - 1];
+			const video = col.children[0];
+			const source = video.children[0];
+			const src = source.getAttribute('src');
+			if (model === 'VIDIM') {
+				model = 'VIDM';
+			}
+			const newSrc = src.replace(/(.*)_[a-z]+\.mp4$/, '$1_' + model.toLowerCase() + '.mp4');
+			video.pause();
+			source.setAttribute('src', newSrc);
+			video.load();
+			video.play();
+		}
+	});
+});
+</script>
+
+</body>
+</html>
