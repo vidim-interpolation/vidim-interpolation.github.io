@@ -292,3 +292,8 @@ div.header_dark_gray h2 {
   right: -8px;
   top: -6px;
 }
+
+.arrow {
+  font-size: 3.5em; /* Adjust arrow size as needed */
+  padding: 0 1px; /* Adjust spacing around arrow as needed */
+}
